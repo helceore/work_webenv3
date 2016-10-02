@@ -41,9 +41,6 @@ def group_required(*group_names):
         return False
     return user_passes_test(in_groups)
 
-
-
-
 @csrf_protect
 def test_select(request):
     all_SearchLabelKeeper = SearchLabelKeeper.objects.all()

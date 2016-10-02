@@ -31,8 +31,6 @@ def basic_one(request):
     view = "<span style='color: red;'>Заявку могут оставить только зарегистрированные пользователи!</span>"
     html = "<html><body> this is %s view</body></html>" % view
     return HttpResponse(html)
-
-#
 def group_required(*group_names):
     def in_groups(user):
         if user.is_authenticated():

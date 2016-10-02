@@ -1,0 +1,34 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Workite</title>
+    <link rel="stylesheet" type="text/css" href="{% static "/css/foundation.css" %}">
+    <link rel="shortcut icon" href="{% static 'kote.gif' %}" type="image/png" />
+</head>
+<body>
+<div class="top-bar">
+    <section class="top-bar-right">
+        <ul class="menu">
+            {% if username %}
+                <li><a href="/auth/logout" %}>Выйти ({{ username }})</a></li>
+            {% else %}
+                <li><a href="/auth/login">Войти</a></li>
+            {% endif %}
+        </ul>
+    </section>
+</div>
+<h1><a href="/">Keeper</a></h1>
+ {% if username %}
+<div class="row">
+    {% block keeper %}{% endblock %}
+</div>
+{% endif %}
+<div class="row">
+    {% block login %}{% endblock %}
+</div>
+{% if not username %}
+    <img src="{% static "kote.gif" %}" width="300px" height="300px ">
+{% endif %}
+</body>
+</html>

@@ -1,0 +1,61 @@
+{% extends 'main.html' %}
+{% block keeper %}
+        <div>
+            <p style="word-break: break-all;">Хэштеги: {%for keeper_search_i in keeper_search%}
+            {{keeper_search_i}}
+            {%endfor%}</p>
+        </div>
+    {% load tz %}
+    {% timezone "Europe/Moscow" %}
+<h6>{{keep.keep_title}}</h6><h6><p class="text-right"><a href="/editkeeper/{{keep.id}}/">Изменить</a></p></h6>
+{{usergroup}}
+<!--</h6><h6><p class="text-right"><a href="/deletekeeper/{{keep.id}}/">Удалить</a></p></h6>-->
+</h6><h6><p class="text-right"><a href="/deletekeeper/{{keep.id}}/">Удалить</a></p></h6>
+<div style="background: #ffe; border: 1px solid #2199e8; padding: 10px;">
+<p style="word-break: break-all;">{{keep.keep_text|safe}}</p>
+    </div>
+<h4>{{keep.keep_data}}</h4>
+
+    <hr>
+{% endtimezone %}
+<div class="large-offset-1 large-11 columns">
+<p>Комментарий:</p>
+{% for feedback in feedbacks %}
+    {% load tz %}
+    {% timezone "Europe/Moscow" %}
+    <div>
+            <h6><p class="text-right">Пользователь: {{feedback.feedback_from}} {{feedback.feedback_data}}</p></h6>
+            <div style="background: #ffe; border: 1px solid #DCDCDC; padding: 10px;"><p style="word-break: break-all;" class="text-left">{{feedback.feedback_text}}</p></div>
+    </div>
+    {% endtimezone %}
+{%endfor%}
+    <div class="row">
+        <div class="large-3 large-offset-5 columns">
+            <ul class="pagination">
+                {% if feedbacks.has_previous %}
+                    <li class="arrow"><a href="/keeper/get/{{keep.id}}/{{ feedbacks.previous_page_number }}/">&laquo;</a></li>
+                {% else %}
+                    <li class="arrow unavailable"><a href="">&laquo;</a></li>
+                {% endif %}
+                {% for page in feedbacks.paginator.page_range %}
+                    {% if page == feedbacks.number %}
+                        <li class="current"><a href="/keeper/get/{{keep.id}}/{{ page }}/">{{ page }}</a></li>
+                    {% else %}
+                        <li><a href="/keeper/get/{{keep.id}}/{{ page }}/">{{ page }}</a></li>
+                    {% endif %}
+                {% endfor %}
+                {% if feedbacks.has_next %}
+                    <li class="arrow"><a href="/keeper/get/{{keep.id}}/{{ feedbacks.next_page_number }}/">&raquo;</a></li>
+                {% else %}
+                    <li class="arrow unavailable"><a href="">&raquo;</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    <form action="/keeper/addfeedback/{{keep.id}}/" method="post">
+        {% csrf_token %}
+        {{ FedForm }}
+        <input type="submit" class="button" value="Добавить комментарий">
+    </form>
+    </div>
+    </div>
+{% endblock %}

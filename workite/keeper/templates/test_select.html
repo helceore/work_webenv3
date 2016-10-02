@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+ <form action="/test_select/" method="post">{% csrf_token %}
+     Логическое И
+   <p><select size="5" multiple="multiple" name="search_attribute">
+       {% for marker in SearchLabelKeepers %}
+            <option {%if marker in tut %}
+                        selected
+                    {%endif%}
+                    value="{{marker.searchlabelkeeper_marker}}">{{marker.searchlabelkeeper_marker}}</option>
+
+       {% endfor %}
+   </select></p>
+     Логическое ИЛИ
+       <p><select size="5" multiple="multiple" name="hero2[]">
+       {% for marker in SearchLabelKeepers %}
+            <option {%if marker in tut_2 %}
+                        selected
+                    {%endif%}
+                    value="{{marker.searchlabelkeeper_marker}}">{{marker.searchlabelkeeper_marker}}</option>
+
+       {% endfor %}
+   </select></p>
+     <p><b>Строка поиска:</b><br><input type="text" size="40" name="search_text"></p>
+ <p><input type="checkbox" name="search_and_only" value="only_and"> Выбрать только указанные</p>
+   <p><input type="submit" value="Отправить"></p>
+  </form>
+    {% for tut1 in tut %}
+        {{tut1}}
+        <hr>
+    {% endfor %}
+    {% for tut2 in tut_2 %}
+        {{tut2}}
+        <hr>
+    {% endfor %}
+    {% for test_ in test %}
+       id =  {{  test_.keeper_id }}
+    {% endfor %}
+{#    {{ test }}#}
+    <div><h2>qss{{ test2 }}</h2></div>
+    {{ grups_true }}
+        {{ grups }}
+    {% for keep in keeps %}
+    {% load tz %}
+    {% timezone "Europe/Moscow" %}
+    <h6><a href="/keeper/get/{{ keep.id }}">{{keep.keep_title}}</a></h6>
+    <p style="word-break: break-all;">{{keep.keep_text|safe}}</p>
+    <!--  {{ data|safe }} отключить экранирование-->
+    <h2>Поисковые теги {{keep.keep_hashTag}}</h2>
+    <h4>{{keep.keep_data}}</h4>
+    <hr>
+    {% endtimezone %}
+{% endfor %}
+</body>
+</html>

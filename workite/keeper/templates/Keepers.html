@@ -1,0 +1,119 @@
+{% extends 'main.html' %}
+{% block keeper %}
+<div class="row">
+     <form action="/" method="post">
+         {% csrf_token %}
+    <div class="medium-6 columns">
+        <div>Включает в себя все выбранные</div>
+        <div>
+            <select size="4" multiple="multiple" name="search_attribute">
+            {% for marker in SearchLabelKeepers %}
+            <option {%if marker.searchlabelkeeper_marker in search_attribute %}
+                        selected
+                    {%endif%}
+                    value="{{marker.searchlabelkeeper_marker}}">{{marker.searchlabelkeeper_marker}}</option>
+
+            {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="medium-6 columns">
+        <div>Условия поиска: </div>
+        <div>
+            <input type="radio" name="search_or_and_only" value="search_and_only"
+            {% if  search_or_and_only == 'search_and_only'%}
+            checked
+            {% endif %}> Включает в себя только выбранные<Br>
+            <input type="radio" name="search_or_and_only" value="search_and"
+            {% if  search_or_and_only == 'search_and'%}
+            checked
+            {% endif %}> Включает в себя все выбранные<Br>
+            <input type="radio" name="search_or_and_only" value="search_or"
+            {% if  search_or_and_only == 'search_or'%}
+            checked
+            {% endif %}> Включает в себя хотя бы один выбранный<Br>
+        </div>
+    </div>
+    <div class="medium-12 columns " >
+        <a href="/keepers_clean_search/" class="button"><h7 class="text-center">Убрать все фильтры</h7></a>
+    </div>
+    <div class="columns"><b>Строка поиска:</b></div>
+    <div class="medium-10 columns">
+        <input type="text" size="40" name="search_text"
+             {% if tut_3 %}
+                    value="{{tut_3}}"
+             {% endif %}>
+    </div>
+    <div class="medium-2 columns">
+        <input type="submit" class="button" value="Поиск">
+    </div>
+  </form>
+</div>
+
+<div>
+{% for keep in keeps %}
+    {% load tz %}
+    {% timezone "Europe/Moscow" %}
+    <h6><a href="/keeper/get/{{ keep.id }}"><p style="word-break: break-all; ">{{keep.keep_title}}</p></a></h6>
+    <!--<p style="word-break: break-all; ">{{keep.keep_text|safe }}</p>-->
+    <div class="block"><p style="word-break: break-all; ">{{keep.keep_text|safe }}</p></div>
+    <!--  {{ data|safe }} отключить экранирование-->
+    <h4>{{keep.keep_data}}</h4>
+    <hr>
+    {% endtimezone %}
+{% endfor %}
+
+</div>
+<!-- paginator -->
+    <div class="row">
+        <div class="large-6 large-offset-4 columns">
+            <ul class="pagination">
+                {% if keeps.has_previous %}
+                    <li class="arrow"><a href="/page/{{ keeps.previous_page_number }}/">&laquo;</a></li>
+                {% else %}
+                    <li class="arrow unavailable"><a href="">&laquo;</a></li>
+                {% endif %}
+                {% if keeps.number == 1%}
+                    <li class="current"><a href="/page/1/">1</a></li>
+                {% else %}
+                    <li><a href="/page/1/">1</a></li>
+                    {% if keeps.number > 5 %}
+                        <li>...</li>
+                    {% endif %}
+                {% endif %}
+
+                {% for page in keeps.paginator.page_range %}
+
+                    {% if page != 1 and page > page_prior and page < page_afterwards and page != keeps.paginator.num_pages %}
+                        {% if page == keeps.number %}
+                            <li class="current"><a href="/page/{{ page }}/">{{ page }}</a></li>
+                        {% else %}
+                            {% if page %}
+                                <li><a href="/page/{{ page }}/">{{ page }}</a></li>
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+
+                {% if keeps.number %}
+                    {% if keeps.number == keeps.paginator.num_pages %}
+                        <li class="current"><a href="/page/{{ keeps.paginator.num_pages }}/">{{ keeps.paginator.num_pages }}</a></li>
+                    {% else %}
+                        {% if keeps.number < num_pages_ %}
+                            <li>...</li>
+                        {% endif %}
+                        <li><a href="/page/{{ keeps.paginator.num_pages }}/">{{ keeps.paginator.num_pages }}</a></li>
+                    {% endif %}
+                {% endif %}
+                {{helpkeeps}}
+                {% if keeps.has_next %}
+                    <li class="arrow"><a href="/page/{{ keeps.next_page_number }}/">&raquo;</a></li>
+                {% else %}
+                    <li class="arrow unavailable"><a href="">&raquo;</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+<h6><p class="text-right"><a href="/newkeeper/">Новая статья</a></p></h6>
+<!--<h6><p class="text-right"><a href="/keepermarkeredit/">Список тегов</a> </p> </h6>-->
+{% endblock %}
